@@ -1,0 +1,456 @@
+<!DOCTYPE html><html class="dark" lang="es" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js" type="module"></script>
+<script id="tailwind-config">
+        try {
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        "colors": {
+                            "error-container": "#93000a",
+                            "on-secondary-fixed-variant": "#394760",
+                            "tertiary-fixed": "#cde6f7",
+                            "on-secondary": "#233148",
+                            "on-secondary-container": "#a8b5d2",
+                            "inverse-surface": "#dbe4ea",
+                            "on-tertiary-container": "#3b5361",
+                            "on-primary": "#003642",
+                            "surface": "#0c1519",
+                            "inverse-on-surface": "#293236",
+                            "error": "#ffb4ab",
+                            "surface-container-low": "#141d21",
+                            "outline": "#859398",
+                            "secondary": "#b9c7e4",
+                            "on-primary-fixed": "#001f27",
+                            "primary": "#a8e8ff",
+                            "primary-fixed-dim": "#3cd7ff",
+                            "surface-tint": "#3cd7ff",
+                            "on-surface": "#dbe4ea",
+                            "surface-variant": "#2d363b",
+                            "on-tertiary-fixed": "#031e2a",
+                            "on-secondary-fixed": "#0d1c32",
+                            "surface-container-high": "#232b30",
+                            "primary-fixed": "#b4ebff",
+                            "outline-variant": "#3c494e",
+                            "on-error": "#690005",
+                            "tertiary-fixed-dim": "#b1cada",
+                            "surface-dim": "#0c1519",
+                            "secondary-fixed": "#d6e3ff",
+                            "primary-container": "#00d4ff",
+                            "on-tertiary": "#1b3340",
+                            "surface-container-highest": "#2d363b",
+                            "on-primary-fixed-variant": "#004e5f",
+                            "secondary-container": "#394760",
+                            "tertiary": "#c9e2f3",
+                            "on-error-container": "#ffdad6",
+                            "secondary-fixed-dim": "#b9c7e4",
+                            "surface-container": "#182125",
+                            "on-background": "#dbe4ea",
+                            "background": "#0c1519",
+                            "on-primary-container": "#00586b",
+                            "surface-container-lowest": "#070f13",
+                            "on-tertiary-fixed-variant": "#324a57",
+                            "inverse-primary": "#00677e",
+                            "on-surface-variant": "#bbc9cf",
+                            "surface-bright": "#323a3f",
+                            "tertiary-container": "#adc6d6",
+                            "neon-green": "#39ff14"
+                        },
+                        "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                        },
+                        "spacing": {
+                            "stack-sm": "12px",
+                            "stack-md": "24px",
+                            "container-padding-mobile": "20px",
+                            "base": "8px",
+                            "stack-lg": "48px",
+                            "gutter": "16px",
+                            "container-padding-desktop": "64px"
+                        },
+                        "fontFamily": {
+                            "display-lg": ["Inter"],
+                            "label-caps": ["Inter"],
+                            "body-lg": ["Inter"],
+                            "body-md": ["Inter"],
+                            "display-lg-mobile": ["Inter"],
+                            "headline-md": ["Inter"]
+                        },
+                        "fontSize": {
+                            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                            "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                            "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                            "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                        }
+                    }
+                }
+            }
+        } catch (_e) {}
+    </script>
+<style>
+        #scroll-video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+            background: #000;
+        }
+        #scroll-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(1.2) contrast(1.1); /* Brighter and more vibrant */
+            transition: transform 0.1s ease-out;
+        }
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .hinge-effect-right {
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top right;
+        }
+        .hinge-effect-right:hover {
+            transform: rotateY(-10deg) rotateX(5deg);
+        }
+        .hinge-effect-left {
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top left;
+        }
+        .hinge-effect-left:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+        .glass-card {
+            background: rgba(12, 21, 25, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(168, 232, 255, 0.2);
+        }
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal-on-scroll.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+<style>.hinge-effect-right:hover { transform: rotateY(-15deg) rotateZ(2deg) !important; } .hinge-effect-left:hover { transform: rotateY(15deg) rotateZ(-2deg) !important; }</style><style>html { scroll-behavior: smooth; }</style></head>
+<body class="font-body-md text-body-md antialiased relative bg-surface text-on-surface">
+<!-- Fullscreen Parallax Video -->
+<div id="scroll-video-container">
+<video autoplay="" id="scroll-video" loop="" muted="" playsinline="" style="transform: scale(1.00453);">
+<source src="https://res.cloudinary.com/hw31kdln/video/upload/v1784591959/3D_product_parallax_scrolling_ef__202607201749_online-video-cutter.com_k56x86.mp4" type="video/mp4">
+</video>
+</div>
+<!-- Particle Canvas -->
+<canvas id="particle-canvas" width="1280" height="104976"></canvas>
+<!-- HUD Top Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-md border-b border-outline-variant/30 shadow-[0_0_20px_rgba(0,212,255,0.1)] flex justify-between items-center px-container-padding-mobile md:px-container-padding-desktop h-20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">explore</span>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg tracking-tighter text-primary-fixed-dim uppercase">Impulso Maya</h1>
+</div>
+<nav class="hidden md:flex gap-8"><a class="text-primary-fixed font-bold border-b-2 border-primary-fixed transition-all scroll-smooth" href="#explorar">Explorar</a><a class="text-on-surface hover:text-primary transition-colors scroll-smooth" href="#tecnologia">Tecnología</a><a class="text-on-surface hover:text-primary transition-colors scroll-smooth" href="#destinos">Destinos</a></nav>
+<div class="relative group"><button class="material-symbols-outlined text-primary p-2 hover:backdrop-brightness-125 transition-all">menu</button><div class="absolute right-0 top-full mt-2 w-48 bg-surface/95 backdrop-blur-xl border border-outline-variant/30 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden"><a href="#explorar" class="block px-4 py-3 text-on-surface hover:bg-primary/10 hover:text-primary transition-colors border-b border-outline-variant/10">Explorar</a><a href="#tecnologia" class="block px-4 py-3 text-on-surface hover:bg-primary/10 hover:text-primary transition-colors border-b border-outline-variant/10">Tecnología</a><a href="#destinos" class="block px-4 py-3 text-on-surface hover:bg-primary/10 hover:text-primary transition-colors border-b border-outline-variant/10">Destinos</a><a href="#inmersion" class="block px-4 py-3 text-on-surface hover:bg-primary/10 hover:text-primary transition-colors">Inmersión</a></div></div>
+</header>
+<!-- Main Content Flow -->
+<main class="relative z-10">
+<!-- Hero Section -->
+<section class="min-h-screen flex items-center justify-center overflow-hidden pt-20" id="explorar">
+<div class="relative z-20 text-center px-container-padding-mobile max-w-4xl parallax-target" data-speed="0.15" style="transform: translateY(-300px);">
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-4 leading-tight text-primary-fixed-dim uppercase">Impulso Maya</h2>
+<p class="font-headline-md text-headline-md text-white mb-stack-lg drop-shadow-lg">Experiencias de VR en las pirámides de Tulum</p>
+<div class="flex flex-col md:flex-row gap-gutter justify-center items-center">
+<button class="bg-primary-container text-on-primary-container px-stack-lg py-3 rounded-full font-bold shadow-[0_0_30px_rgba(0,212,255,0.6)] hover:scale-105 transition-all flex items-center gap-2">
+                        Iniciar Viaje <span class="material-symbols-outlined">rocket_launch</span>
+</button>
+<button class="bg-black/40 backdrop-blur-sm border border-outline px-stack-lg py-3 rounded-full text-white hover:bg-white/10 transition-all">Ver Tráiler</button>
+</div>
+</div>
+</section>
+<!-- Pyramid Video Feature Section -->
+<section class="py-stack-lg flex justify-center px-container-padding-mobile" style="perspective: 1000px;">
+<div class="max-w-5xl w-full hinge-effect-right rounded-2xl overflow-hidden bg-black/40 backdrop-blur-md relative reveal-on-scroll shadow-[0_20px_50px_rgba(0,0,0,0.5)] active" style="transform-origin: top right; transition: transform 0.5s ease-out;">
+<div class="absolute top-4 left-4 z-20 flex items-center gap-2">
+<span class="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_red]"></span>
+<span class="text-label-caps bg-black/60 text-white px-2 py-0.5 rounded border border-white/20">LIVE_FEED_01</span>
+</div>
+<div class="absolute bottom-4 right-4 z-20">
+<span class="text-label-caps text-neon-green tracking-widest font-bold">X-RAY_SCAN_ACTIVE</span>
+</div>
+<video autoplay="" class="w-full aspect-video object-cover" loop="" muted="" playsinline="">
+<source src="https://res.cloudinary.com/hw31kdln/video/upload/v1784701549/V%C3%ADdeo_sin_t%C3%ADtulo_1_fqsklf.mp4" type="video/mp4">
+</video>
+</div>
+</section>
+<!-- Description Section -->
+<section class="min-h-[60vh] w-full flex flex-col items-center justify-center overflow-hidden py-stack-lg" id="inmersion">
+<div class="relative z-10 text-center max-w-2xl p-stack-lg glass-card rounded-2xl reveal-on-scroll active">
+<h3 class="font-display-lg text-display-lg-mobile text-primary mb-4 drop-shadow-md">Inmersión Total</h3>
+<p class="text-on-surface text-lg leading-relaxed font-medium">La tecnología LiDAR aplicada a la arqueología permite reconstrucciones precisas milimétricas. Siente la brisa del Caribe mientras recorres el Castillo de Tulum desde una perspectiva imposible.</p>
+<div class="mt-8 flex justify-center"><a href="https://www.meshy.ai/s/ADkBEU" target="_blank" class="bg-primary-fixed-dim text-on-primary px-stack-lg py-3 rounded-lg font-bold shadow-[0_0_20px_rgba(60,215,255,0.4)] hover:scale-105 hover:shadow-[0_0_30px_rgba(60,215,255,0.6)] transition-all flex items-center gap-2 uppercase tracking-widest text-sm">Explorar VR Experience <span class="material-symbols-outlined">open_in_new</span></a></div></div>
+</section>
+<!-- 3D Model Section -->
+<section class="py-stack-lg flex justify-center px-container-padding-mobile" style="perspective: 1000px;" id="destinos">
+<div class="max-w-4xl w-full glass-card p-2 rounded-2xl shadow-[0_0_40px_rgba(0,212,255,0.3)] overflow-hidden reveal-on-scroll hinge-effect-left relative active" style="transform-origin: top left; transition: transform 0.5s ease-out;">
+<div class="absolute top-4 right-4 z-20">
+<span class="text-label-caps bg-neon-green/20 text-neon-green border border-neon-green/40 px-3 py-1 rounded-full backdrop-blur-md shadow-[0_0_10px_#39ff14]">360° AR ACTIVE</span>
+</div>
+<div class="aspect-video rounded-xl overflow-hidden border border-outline-variant/30 bg-black/20">
+<model-viewer ar="" camera-controls="" environment-image="https://modelviewer.dev/shared-assets/environments/moon_1k.hdr" shadow-intensity="1" src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb" style="width: 100%; height: 500px; background-color: transparent;" touch-action="pan-y" ar-status="not-presenting">
+</model-viewer>
+</div>
+</div>
+</section>
+<!-- Lugares Visitados -->
+<section class="py-stack-lg">
+<div class="max-w-7xl mx-auto px-container-padding-mobile md:px-container-padding-desktop">
+<div class="flex items-end justify-between mb-stack-lg reveal-on-scroll active">
+<div>
+<h2 class="font-display-lg text-display-lg-mobile text-primary-fixed-dim drop-shadow-lg">Destinos de la Red</h2>
+<p class="text-white drop-shadow-md font-semibold">Navega a través del tiempo y el espacio en segundos.</p>
+</div>
+<div class="hidden md:block">
+<span class="text-label-caps font-label-caps text-secondary-fixed bg-black/40 px-3 py-1 rounded backdrop-blur-sm">MUNDO VIRTUAL 2.0</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-2">
+<!-- Petra Collage Item -->
+<div class="md:col-start-7 md:col-span-6 relative group cursor-pointer overflow-hidden rounded-xl glass-card h-[400px] reveal-on-scroll active">
+<img alt="Petra VR" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfUBzwnenI297xE8r2W9gcNdpxFf2cVDDeB3cftXdXBj08cjm2x4HbsaJ2jgi61RAfqu7qxjmQD4Nd-2sXSg0usOP2u8M9dap4HIwSn6z_Bhw8cnrmGdYlMDxbnX2L1mTcF21zvVpk-a0IwGNSpzShunabFZqyLyOA7xYvntj0iWwcTUsZtIiIIxJ8Kn_SqRGQ_nhgdP01xwV0__3uzyByZe0jxGG2x5fCmUYvhPK3T-vPx6An2HYZ8Qv9HvAStuD5i6NKQkJDNdA">
+<div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-center items-center p-stack-md text-center backdrop-blur-sm">
+<span class="material-symbols-outlined text-primary mb-2">view_in_ar</span>
+<h4 class="font-headline-md text-white mb-2">Petra: La Ciudad Rosa</h4>
+<p class="text-on-surface text-sm leading-relaxed">Reconstrucción volumétrica mediante LiDAR que permite visualizar la Ciudad Rosa en su apogeo del siglo I.</p>
+</div>
+<div class="absolute bottom-4 left-4 group-hover:opacity-0 transition-opacity">
+<span class="text-label-caps bg-primary/20 text-primary px-3 py-1 rounded-full backdrop-blur-md">JORDANIA</span>
+</div>
+</div>
+<!-- Tikal Collage Item -->
+<div class="md:col-span-6 relative group cursor-pointer overflow-hidden rounded-xl glass-card h-[400px] md:-mt-12 reveal-on-scroll active">
+<img alt="Tikal VR" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMG-Xzmhw0kY8bgKicRTf-GBBus6CjnMuKCD5A6yxYd0F2LSHuB_RkwApL_7bUy0zPTSPsc5mU9qS-kpfBgOPezeL_z-dFdFlHARu2j12FLcV4rn6AO0ysOn-nnI3CqepFB3vKKPd0uWlC5-fSZokHXOAoALXe4KAppxt_DPgRBOof2hd6L-oM3t_DYgBCs7dX4ptOUJFAarBB_6OIAU6rEgYhc1yOMz97JLaYPxZ8RwKpYPdnFVxy2b7_Faht-1TpuUyPJ96E1f0">
+<div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-center items-center p-stack-md text-center backdrop-blur-sm">
+<span class="material-symbols-outlined text-primary mb-2">layers</span>
+<h4 class="font-headline-md text-white mb-2">Tikal, Guatemala</h4>
+<p class="text-on-surface text-sm leading-relaxed">Superposición de capas históricas que revelan la astronomía maya oculta tras la densa selva de Guatemala.</p>
+</div>
+<div class="absolute bottom-4 left-4 group-hover:opacity-0 transition-opacity">
+<span class="text-label-caps bg-primary/20 text-primary px-3 py-1 rounded-full backdrop-blur-md">GUATEMALA</span>
+</div>
+</div>
+<!-- Acropolis Collage Item -->
+<div class="md:col-start-5 md:col-span-8 relative group cursor-pointer overflow-hidden rounded-xl glass-card h-[350px] md:mt-8 reveal-on-scroll active">
+<img alt="Acropolis VR" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA4EeexvOPJcP231lRp7pF2vOBgp5f0kJTEdJj8Qf4FD2_SScJtBdLo-mhdqkumH4G8lsonxoi7TmBnHGbCrlLFxfCthHV4wfXmhqGgQeyBTg3M2a9Q-V6o3_ptbrF3mmLRtA0R7gX0DDj4kikpgHKCUEBFSmfmMpDcTsVmwNde_Ch8hoPcguL65MG32jYZIz2kD4eu9u3pOnbaKOWMrQFditJYa1rLNnls8oSneC9AHfmvaTWHiB3tVwvutWmP3p8M9_XHPQx4yM">
+<div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-center items-center p-stack-md text-center backdrop-blur-sm">
+<span class="material-symbols-outlined text-primary mb-2">precision_manufacturing</span>
+<h4 class="font-headline-md text-white mb-2">Acrópolis: El Inicio</h4>
+<p class="text-on-surface text-sm max-w-xl leading-relaxed">Modelado 3D de alta precisión que restaura el mármol y las policromías originales del Partenón en tiempo real.</p>
+</div>
+<div class="absolute bottom-4 left-4 group-hover:opacity-0 transition-opacity">
+<span class="text-label-caps bg-primary/20 text-primary px-3 py-1 rounded-full backdrop-blur-md">GRECIA</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Creator Section -->
+<section class="py-stack-lg" style="perspective: 1200px;" id="tecnologia">
+<div class="max-w-6xl mx-auto px-container-padding-mobile">
+<div class="rounded-2xl bg-black/80 backdrop-blur-xl p-base md:p-stack-md flex flex-col md:flex-row items-center gap-stack-md reveal-on-scroll border border-neon-green/30 active">
+<!-- Video Container -->
+<div class="w-full md:w-1/2 aspect-video rounded-xl overflow-hidden relative shadow-[0_0_30px_rgba(57,255,20,0.2)] transition-all duration-700 hover:scale-[1.02]">
+<video autoplay="" class="w-full h-full object-cover" loop="" muted="" playsinline="">
+<source src="https://res.cloudinary.com/hw31kdln/video/upload/v1784680774/hailuo-2_3_6_second_16_9_cinematic_animation._A_futuristic_dark_technological_cube_with_glo-0_furzbo.mp4" type="video/mp4">
+</video>
+<div class="absolute top-4 left-4 bg-neon-green/10 backdrop-blur-md border border-neon-green/40 p-2 rounded-lg text-[10px] font-mono text-neon-green flex flex-col gap-1">
+<span class="animate-pulse">● CORE_STABLE</span>
+<span class="">_STRATEGY: REVOLUTIONARY</span>
+</div>
+</div>
+<!-- Text Content -->
+<div class="w-full md:w-1/2 space-y-4">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-neon-green text-3xl animate-bounce">deployed_code</span>
+<h3 class="font-display-lg text-2xl text-white tracking-widest uppercase">Migue Strategy</h3>
+</div>
+<p class="text-body-md text-on-surface leading-relaxed font-medium italic border-l-2 border-neon-green pl-4">
+                            "Agencia vanguardista: diseño inteligente, estética funcional, estrategias revolucionarias, creatividad disruptiva, ejecución impecable, métricas orientadas a KPIs, optimización continua, tabuladores precisos, crecimiento escalable y ROI medible."
+                        </p>
+<div class="flex gap-4 pt-2">
+<div class="h-1 w-12 bg-neon-green rounded-full shadow-[0_0_10px_#39ff14]"></div>
+<div class="h-1 w-6 bg-neon-green/40 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="relative w-full bg-black/90 backdrop-blur-3xl border-t border-outline-variant/20 z-20">
+<div class="max-w-7xl mx-auto p-stack-md flex flex-col md:flex-row justify-between items-center gap-stack-sm">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-full overflow-hidden border-2 border-primary-container shadow-2xl">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-RslY0O1vuZynxF1yRsQWZ_joYXWV0rVwNotHYazRVHEyld6Jai2vlSWIII--AHgEvW7SHHHx9HjtuwLWQX3hAGFa0jU-nQr7Oj-oJzs5-xZKhlp_nZVuL5Fys28WBAW5eNgSBJOqfQnTghnMCBOzvO481Vp7D5tb8q52FAJ9HKS7CDcU9HqTFeHwRtb02NmrJn-_g1RHw4Kl9QVMwBO2CbgAcJpkuaKcN2XwN8Zqjmz7rRoD6XN-XDNP_VjawCrwC1JQCtU817Q">
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-primary-fixed">IMPULSO MAYA</p>
+<p class="text-tertiary-fixed-dim font-medium">Modelos 3D Interactivos</p>
+</div>
+</div>
+<p class="text-on-surface font-body-md text-center md:text-left font-semibold">Visionary VR Experiences.</p>
+<div class="flex gap-6">
+<a class="text-on-surface hover:text-white transition-all underline underline-offset-4" href="#">Explorar</a>
+<a class="text-on-surface hover:text-white transition-all" href="#">Tecnología</a>
+<a class="text-on-surface hover:text-white transition-all" href="#">Soporte</a>
+</div>
+</div>
+<div class="text-center opacity-60 text-sm font-medium pb-8">
+            © 2024 Impulso Maya. All rights reserved.
+        </div>
+<div class="max-w-7xl mx-auto px-stack-md pb-8 flex justify-center md:justify-end">
+<script class="">
+function handleChatSend() {
+    const input = document.getElementById('chat-input');
+    const container = document.getElementById('chat-messages');
+    if (!input.value.trim()) return;
+
+    const userMsg = document.createElement('div');
+    userMsg.className = 'bg-white/5 rounded-lg p-2 text-sm text-on-surface text-right border-r-2 border-outline-variant/30';
+    userMsg.innerHTML = `<p class="font-bold text-[10px] text-on-surface/60 uppercase mb-1">Tú</p>${input.value}`;
+    container.appendChild(userMsg);
+    
+    const val = input.value.toLowerCase();
+    input.value = '';
+    container.scrollTop = container.scrollHeight;
+
+    setTimeout(() => {
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'bg-primary/10 rounded-lg p-2 text-sm text-on-surface border-l-2 border-primary';
+        let response = 'Procesando tu solicitud en la red...';
+        if (val.includes('tulum')) response = 'El Castillo de Tulum está disponible en VR. ¿Quieres iniciar el viaje?';
+        if (val.includes('petra')) response = 'Petra: La Ciudad Rosa ha sido cargada con éxito.';
+        
+        aiMsg.innerHTML = `<p class="font-bold text-[10px] text-primary uppercase mb-1">Maya</p>${response}`;
+        container.appendChild(aiMsg);
+        container.scrollTop = container.scrollHeight;
+    }, 800);
+}
+</script></div></footer>
+<script>
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const mouse = { x: null, y: null };
+
+        function initParticles() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 150; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 1,
+                    speedX: Math.random() * 1 - 0.5,
+                    speedY: Math.random() * 1 - 0.5,
+                    color: i % 3 === 0 ? '#00d4ff' : (i % 2 === 0 ? '#a8e8ff' : '#ffffff'),
+                    opacity: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+
+                if (p.x > canvas.width) p.x = 0;
+                if (p.x < 0) p.x = canvas.width;
+                if (p.y > canvas.height) p.y = 0;
+                if (p.y < 0) p.y = canvas.height;
+
+                if (mouse.x && mouse.y) {
+                    const dx = mouse.x - p.x;
+                    const dy = mouse.y - p.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 200) {
+                        p.x -= dx * 0.01;
+                        p.y -= dy * 0.01;
+                    }
+                }
+
+                ctx.globalAlpha = p.opacity;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('resize', initParticles);
+
+        const scrollVideo = document.getElementById('scroll-video');
+        window.addEventListener('scroll', () => {
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = window.scrollY / scrollHeight;
+            
+            if(scrollVideo) {
+                const scale = 1 + (scrollPercent * 0.15);
+                const opacity = 1; 
+                scrollVideo.style.transform = `scale(${scale})`;
+            }
+
+            document.querySelectorAll('.parallax-target').forEach(el => {
+                const speed = parseFloat(el.dataset.speed);
+                const yPos = -(window.scrollY * speed);
+                el.style.transform = `translateY(${yPos}px)`;
+            });
+        });
+
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+
+        initParticles();
+        animateParticles();
+        
+        window.addEventListener('click', () => {
+            if (scrollVideo && scrollVideo.paused) scrollVideo.play();
+        }, { once: true });
+    </script>
+
+
+<a href="http://wa.me/525583335581" target="_blank" class="fixed bottom-6 right-6 z-50 w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform animate-pulse" aria-label="Contact on WhatsApp"><svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path></svg></a></body></html>
