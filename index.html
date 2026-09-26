@@ -1,9 +1,11 @@
-<!DOCTYPE html>
-
-<html class="dark" lang="es" style=""><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"/>
+﻿<!DOCTYPE html><html class="dark" lang="es" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+<!-- Swiper CSS -->
+<link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet">
+<!-- Three.js Library -->
+<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
         try {
@@ -146,15 +148,68 @@
         .interactive-video-container.is-playing video {
             filter: brightness(1.05);
         }
+
+        /* Swiper Center Focus Reveal Styles */
+        .swiper-center-focus {
+            overflow: visible !important;
+            padding-top: 28px;
+            padding-bottom: 40px;
+        }
+        .swiper-center-focus .swiper-slide {
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), filter 0.35s ease;
+            transform: scale(0.88);
+            opacity: 0.55;
+            filter: blur(0.6px) brightness(0.75);
+            cursor: pointer;
+        }
+        .swiper-center-focus .swiper-slide-active {
+            transform: scale(1.1) !important;
+            opacity: 1 !important;
+            filter: none !important;
+            z-index: 20;
+        }
+        .swiper-center-focus .swiper-slide-active .slide-card-container {
+            border-color: #00d4ff !important;
+            box-shadow: 0 0 35px rgba(0, 212, 255, 0.4), 0 20px 40px -10px rgba(0,0,0,0.8) !important;
+        }
+        .swiper-center-focus .swiper-slide .slide-description {
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: max-height 0.4s ease, opacity 0.35s ease, transform 0.35s ease;
+            overflow: hidden;
+        }
+        .swiper-center-focus .swiper-slide-active .slide-description {
+            max-height: 120px;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .swiper-center-focus .swiper-slide-active .active-badge {
+            opacity: 1;
+        }
+        .swiper-pagination-bullet {
+            background: #859398 !important;
+            opacity: 0.5 !important;
+            width: 8px !important;
+            height: 8px !important;
+            transition: all 0.3s ease !important;
+        }
+        .swiper-pagination-bullet-active {
+            background: #00d4ff !important;
+            opacity: 1 !important;
+            width: 28px !important;
+            border-radius: 9999px !important;
+            box-shadow: 0 0 12px #00d4ff !important;
+        }
     </style>
 </head>
 <body class="font-body-md text-body-md antialiased relative bg-surface text-on-surface">
 <!-- Continuous Background Video Loop as specified -->
 <video autoplay="" class="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none opacity-40" loop="" muted="" playsinline="">
-<source src="https://res.cloudinary.com/hw31kdln/video/upload/v1790102625/Particulas-Azules_1_pnkssj.mp4" type="video/mp4"/>
+<source src="https://res.cloudinary.com/hw31kdln/video/upload/v1790102625/Particulas-Azules_1_pnkssj.mp4" type="video/mp4">
 </video>
 <!-- Particle Canvas -->
-<canvas height="8875" id="particle-canvas" width="1280"></canvas>
+<canvas height="9777" id="particle-canvas" width="1280"></canvas>
 <!-- Navigation HUD -->
 <header class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-md border-b border-outline-variant/30 shadow-[0_0_20px_rgba(0,212,255,0.1)] flex justify-between items-center px-container-padding-mobile md:px-container-padding-desktop h-20">
 <div class="flex items-center gap-3">
@@ -165,6 +220,7 @@
 <a class="text-primary-fixed font-bold border-b-2 border-primary-fixed transition-all" href="#explorar">Explorar</a>
 <a class="text-on-surface hover:text-primary transition-colors" href="#bienvenida">El Resort</a>
 <a class="text-on-surface hover:text-primary transition-colors" href="#habitaciones">Suites &amp; Refugios</a>
+<a class="text-on-surface hover:text-primary transition-colors" href="#filosofia-carousel">Experiencias</a>
 <a class="text-on-surface hover:text-primary transition-colors" href="#gastronomia">Gastronomía</a>
 <a class="text-on-surface hover:text-primary transition-colors" href="#ar-experience">App AR 360°</a>
 <a class="text-on-surface hover:text-primary transition-colors" href="#vr-demo-pricing">Pase VR</a>
@@ -177,6 +233,7 @@
 <a class="block px-4 py-3 text-on-surface hover:bg-primary/10 hover:text-primary transition-colors border-b border-outline-variant/10 text-sm" href="#explorar">Explorar</a>
 <a class="block px-4 py-3 text-on-surface hover:bg-primary/10 hover:text-primary transition-colors border-b border-outline-variant/10 text-sm" href="#bienvenida">Bienvenida Resort</a>
 <a class="block px-4 py-3 text-on-surface hover:bg-primary/10 hover:text-primary transition-colors border-b border-outline-variant/10 text-sm" href="#habitaciones">Suites de Lujo</a>
+<a class="block px-4 py-3 text-on-surface hover:bg-primary/10 hover:text-primary transition-colors border-b border-outline-variant/10 text-sm" href="#filosofia-carousel">Filosofía &amp; Vivencias</a>
 <a class="block px-4 py-3 text-on-surface hover:bg-primary/10 hover:text-primary transition-colors border-b border-outline-variant/10 text-sm" href="#gastronomia">Gastronomía Maya</a>
 <a class="block px-4 py-3 text-on-surface hover:bg-primary/10 hover:text-primary transition-colors border-b border-outline-variant/10 text-sm" href="#ar-experience">Tecnología AR</a>
 <a class="block px-4 py-3 text-on-surface hover:bg-primary/10 hover:text-primary transition-colors border-b border-outline-variant/10 text-sm" href="#vr-demo-pricing">Pase &amp; Planes VR</a>
@@ -194,9 +251,9 @@
 <span class="w-2 h-2 rounded-full bg-primary-container animate-ping"></span> Eco-Resort de Lujo &amp; Arqueología Inmersiva
 </span>
 <h2 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-4 leading-tight text-primary-fixed-dim uppercase drop-shadow-2xl">Impulso Maya</h2>
-<p class="font-headline-md text-headline-md text-white mb-stack-lg drop-shadow-lg max-w-2xl mx-auto">Santuario bioclimático en la selva caribeña con experiencias VR en Tulum</p>
-<div class="flex flex-col md:flex-row gap-gutter justify-center items-center">
-<a class="bg-primary-container text-on-primary-container px-stack-lg py-3 rounded-full font-bold shadow-[0_0_30px_rgba(0,212,255,0.6)] hover:scale-105 transition-all flex items-center gap-2" href="#reserva-widget">
+<p class="font-headline-md text-headline-md text-white drop-shadow-lg max-w-2xl mx-auto mb-1">Santuario bioclimático en la selva caribeña con experiencias VR en Tulum</p>
+<div class="relative w-full max-w-3xl mx-auto flex items-center justify-center pointer-events-none" id="threejs-hero-pyramid" style="min-height: 340px; height: 340px; z-index: 5; margin-top: -16px; margin-bottom: 0px;"><div id="threejs-container-ANIMATION_2" style="width: 100%; height: 100%; min-height: 380px; background: transparent;"></div><div class="absolute bottom-2 left-1/2 -translate-x-1/2 pointer-events-none z-10"><span class="text-label-caps bg-black/50 text-primary-fixed border border-primary-container/30 px-3.5 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest backdrop-blur-sm shadow-[0_0_15px_rgba(0,212,255,0.3)] flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary-container animate-ping"></span> RECONSTRUCCIÓN 3D HOLOGRÁFICA TULUM</span></div></div><div class="flex flex-col md:flex-row gap-gutter justify-center items-center">
+<a class="bg-primary-container text-on-primary-container px-stack-lg py-3 rounded-full font-bold shadow-[0_0_30px_rgba(0,212,255,0.6)] hover:scale-105 transition-all flex items-center gap-2" href="#motor-reserva">
     Reservar Estancia <span class="material-symbols-outlined">key</span>
 </a>
 <a class="bg-black/40 backdrop-blur-sm border border-outline px-stack-lg py-3 rounded-full text-white hover:bg-white/10 transition-all flex items-center gap-2" href="#bienvenida">
@@ -210,7 +267,7 @@
 <div class="max-w-7xl mx-auto px-container-padding-mobile md:px-container-padding-desktop">
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 <div class="lg:col-span-7 rounded-2xl overflow-hidden glass-card border border-primary/30 shadow-[0_0_40px_rgba(0,212,255,0.25)] relative group reveal-on-scroll active">
-<img alt="Luxury boutique eco-hotel in Tulum jungle" class="w-full h-[460px] object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/AEtjO1XJ_Z7ok_HQ2b67nSvZxV2M3T7l4FaL_zBmg-PgHg_ZUilkrq-3S_BSoux7Z9mToaOCv0GifWO6IheD4itqU77eHxy1XFsft-WnL1MwyPecVSMJIxvH8AFcoD9OcUD0cXCzNtqmae7rl1X5y0WhCqgCx6iEES30uY8TsRla6ffaczVY6SNXStvqtCeZU2bQjYh6EacO-w1npD0aqhzcX5aBiBcK-A3CnnBsXxx0GMIwpLy_qgw87Jnb9tI"/>
+<img alt="Santuario Bioclimático Impulso Maya Tulum" class="w-full h-[460px] object-cover group-hover:scale-105 transition-transform duration-700" src="assets/img/habiraciones-tulum.webp">
 <div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-80"></div>
 <div class="absolute top-4 left-4 z-10 flex items-center gap-2">
 <span class="text-label-caps bg-black/80 text-neon-green border border-neon-green/40 px-3 py-1 rounded-full backdrop-blur-md">HABITAS TULUM ECO-SANCTUARY</span>
@@ -223,13 +280,13 @@
 <span class="text-xs font-mono text-on-surface-variant flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-neon-green"></span> RECEPCIÓN 24/7 ACTIVA</span>
 </div>
 </div>
-<div class="lg:col-span-5 space-y-5 reveal-on-scroll active"><div class="flex items-center justify-between flex-wrap gap-2"><span class="text-label-caps bg-primary/10 text-primary border border-primary/30 px-3 py-1 rounded-full backdrop-blur-md uppercase tracking-widest font-bold">Villa Insignia • Selva &amp; Mar</span><span class="text-[11px] font-mono font-bold bg-neon-green/15 text-neon-green border border-neon-green/40 px-2.5 py-0.5 rounded-full">ALL-INCLUSIVE VR EXPERIENCIA</span></div><h2 class="font-display-lg text-display-lg-mobile md:text-3xl text-white font-bold leading-tight">Suite Santuario Selva &amp; Mar</h2><div class="flex items-baseline gap-2 pb-1 border-b border-outline-variant/20"><span class="text-3xl font-extrabold text-primary-fixed font-headline-md">$790</span><span class="text-xs text-on-surface-variant font-mono">USD / noche</span><span class="text-xs text-neon-green font-mono ml-auto font-bold">● TARIFA DE APERTURA</span></div><p class="text-on-surface text-body-md leading-relaxed">Villa insignia enclavada en la reserva bioclimática de Tulum. Arquitectura biofílica en maderas nobles sostenibles, sendero de cuarzo iluminado con linternas artesanales, acceso exclusivo a playa privada virgen y sistema inmersivo de desconexión sensorial con equipamiento VR de última generación.</p><div class="grid grid-cols-2 gap-3 pt-1"><div class="glass-card p-3 rounded-xl border border-outline-variant/20"><span class="material-symbols-outlined text-primary text-xl mb-1">spa</span><p class="text-white font-bold text-xs">Wellness &amp; Copal</p><p class="text-[11px] text-on-surface-variant">Ritual ancestral de bienvenida</p></div><div class="glass-card p-3 rounded-xl border border-outline-variant/20"><span class="material-symbols-outlined text-primary text-xl mb-1">deck</span><p class="text-white font-bold text-xs">Playa Virgen Exclusiva</p><p class="text-[11px] text-on-surface-variant">Acceso directo sin multitudes</p></div></div><div class="pt-2 flex items-center gap-3"><a class="flex-1 bg-primary-container text-on-primary-container font-bold py-3 rounded-xl shadow-[0_0_20px_rgba(0,212,255,0.4)] hover:bg-primary-fixed-dim hover:scale-[1.02] transition-all text-xs uppercase tracking-wider flex items-center justify-center gap-2" href="#reserva-widget"><span class="material-symbols-outlined text-base">bookmark</span> Reservar Suite Santuario</a><a class="px-3.5 py-3 border border-outline-variant/40 hover:border-primary-container rounded-xl text-white text-xs font-semibold flex items-center gap-1.5 transition-all" href="#ar-experience"><span class="material-symbols-outlined text-base text-primary">view_in_ar</span> Ver en AR 360°</a></div></div>
+<div class="lg:col-span-5 space-y-5 reveal-on-scroll active"><div class="flex items-center justify-between flex-wrap gap-2"><span class="text-label-caps bg-primary/10 text-primary border border-primary/30 px-3 py-1 rounded-full backdrop-blur-md uppercase tracking-widest font-bold">Villa Insignia • Selva &amp; Mar</span><span class="text-[11px] font-mono font-bold bg-neon-green/15 text-neon-green border border-neon-green/40 px-2.5 py-0.5 rounded-full">ALL-INCLUSIVE VR EXPERIENCIA</span></div><h2 class="font-display-lg text-display-lg-mobile md:text-3xl text-white font-bold leading-tight">Suite Santuario Selva &amp; Mar</h2><div class="flex items-baseline gap-2 pb-1 border-b border-outline-variant/20"><span class="text-3xl font-extrabold text-primary-fixed font-headline-md">$790</span><span class="text-xs text-on-surface-variant font-mono">USD / noche</span><span class="text-xs text-neon-green font-mono ml-auto font-bold">● TARIFA DE APERTURA</span></div><p class="text-on-surface text-body-md leading-relaxed">Villa insignia enclavada en la reserva bioclimática de Tulum. Arquitectura biofílica en maderas nobles sostenibles, sendero de cuarzo iluminado con linternas artesanales, acceso exclusivo a playa privada virgen y sistema inmersivo de desconexión sensorial con equipamiento VR de última generación.</p><div class="grid grid-cols-2 gap-3 pt-1"><div class="glass-card p-3 rounded-xl border border-outline-variant/20"><span class="material-symbols-outlined text-primary text-xl mb-1">spa</span><p class="text-white font-bold text-xs">Wellness &amp; Copal</p><p class="text-[11px] text-on-surface-variant">Ritual ancestral de bienvenida</p></div><div class="glass-card p-3 rounded-xl border border-outline-variant/20"><span class="material-symbols-outlined text-primary text-xl mb-1">deck</span><p class="text-white font-bold text-xs">Playa Virgen Exclusiva</p><p class="text-[11px] text-on-surface-variant">Acceso directo sin multitudes</p></div></div><div class="pt-2 flex items-center gap-3"><a class="flex-1 bg-primary-container text-on-primary-container font-bold py-3 rounded-xl shadow-[0_0_20px_rgba(0,212,255,0.4)] hover:bg-primary-fixed-dim hover:scale-[1.02] transition-all text-xs uppercase tracking-wider flex items-center justify-center gap-2" href="#motor-reserva"><span class="material-symbols-outlined text-base">bookmark</span> Reservar Suite Santuario</a><a class="px-3.5 py-3 border border-outline-variant/40 hover:border-primary-container rounded-xl text-white text-xs font-semibold flex items-center gap-1.5 transition-all" href="#ar-experience"><span class="material-symbols-outlined text-base text-primary">view_in_ar</span> Ver en AR 360°</a></div></div>
 </div>
 </div>
 </section>
 <!-- Pyramid Video Feature Section (Interactive 1: Left Tilt + Hover Play/Pause + Lazy Loading) -->
 <section class="py-stack-lg flex justify-center px-container-padding-mobile" style="perspective: 1200px;">
-<div class="max-w-5xl w-full tilt-card-left interactive-video-container is-paused rounded-2xl overflow-hidden bg-black/40 backdrop-blur-md relative reveal-on-scroll shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-primary/30 cursor-pointer active" data-interactive-video="video-tulum-1">
+<div class="max-w-5xl w-full tilt-card-left interactive-video-container rounded-2xl overflow-hidden bg-black/40 backdrop-blur-md relative reveal-on-scroll shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-primary/30 cursor-pointer active is-paused" data-interactive-video="video-tulum-1">
 <!-- HUD Overlay Badges -->
 <div class="absolute top-4 left-4 z-20 flex items-center gap-2 pointer-events-none">
 <span class="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_red]"></span>
@@ -241,19 +298,17 @@
 </div>
 <!-- Dynamic Hover/Play Status Badge -->
 <div class="absolute top-4 right-4 z-20 pointer-events-none transition-all duration-300">
-<span class="video-status-badge text-[11px] font-mono font-bold bg-black/80 text-primary-fixed border border-primary/40 px-3 py-1 rounded-full backdrop-blur-md flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,212,255,0.3)]">
-<span class="material-symbols-outlined text-xs text-primary animate-pulse">touch_app</span> Pasa el cursor para reproducir
-</span>
+<span class="video-status-badge text-[11px] font-mono font-bold bg-black/80 border border-primary/40 px-3 py-1 rounded-full backdrop-blur-md flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,212,255,0.3)] text-primary-fixed"><span class="material-symbols-outlined text-xs">touch_app</span> Pasa el cursor para reproducir</span>
 </div>
 <!-- Floating Play/Pause Center Indicator (visible when paused) -->
-<div class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none play-indicator transition-opacity duration-300">
+<div class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none play-indicator transition-opacity duration-300" style="opacity: 1;">
 <div class="w-16 h-16 rounded-full bg-black/60 border border-primary/50 backdrop-blur-md flex items-center justify-center text-primary shadow-[0_0_30px_rgba(0,212,255,0.4)]">
 <span class="material-symbols-outlined text-3xl">play_arrow</span>
 </div>
 </div>
 <!-- Video Element with Lazy Loading and Metadata -->
 <video class="w-full h-full object-cover rounded-xl" id="video-tulum-1" muted="" playsinline="" preload="metadata" style="width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16 / 9; min-height: 380px;">
-<source data-src="https://res.cloudinary.com/hw31kdln/video/upload/v1790047139/Tul%C3%BAm_1_h9ebht.mp4" type="video/mp4"/>
+<source data-src="https://res.cloudinary.com/hw31kdln/video/upload/v1790047139/Tul%C3%BAm_1_h9ebht.mp4" src="https://res.cloudinary.com/hw31kdln/video/upload/v1790047139/Tul%C3%BAm_1_h9ebht.mp4" type="video/mp4">
 </video>
 </div>
 </section>
@@ -327,7 +382,7 @@
 </ul>
 </div>
 <div>
-<a class="w-full bg-black/60 border border-primary-container/40 hover:bg-primary-container hover:text-on-primary-container text-white font-bold py-3.5 px-4 rounded-xl text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2" href="#reserva-widget">
+<a class="w-full bg-black/60 border border-primary-container/40 hover:bg-primary-container hover:text-on-primary-container text-white font-bold py-3.5 px-4 rounded-xl text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2" href="#motor-reserva">
 <span class="material-symbols-outlined text-base">add_shopping_cart</span> Contratar Pase VR ($39 USD)
                     </a>
 </div>
@@ -371,7 +426,7 @@
 </ul>
 </div>
 <div>
-<a class="w-full bg-neon-green text-black hover:bg-white font-bold py-3.5 px-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-[0_0_25px_rgba(57,255,20,0.5)] flex items-center justify-center gap-2" href="#reserva-widget">
+<a class="w-full bg-neon-green text-black hover:bg-white font-bold py-3.5 px-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-[0_0_25px_rgba(57,255,20,0.5)] flex items-center justify-center gap-2" href="#motor-reserva">
 <span class="material-symbols-outlined text-base">hotel_class</span> Reservar 7+ Días con VR Bonificado
                     </a>
 </div>
@@ -398,7 +453,7 @@
 <!-- Room 1: Villa Ka'an Panoramic & Plunge Pool -->
 <div class="glass-card rounded-2xl overflow-hidden border border-outline-variant/30 hover:border-primary-container transition-all flex flex-col group reveal-on-scroll active">
 <div class="relative h-[320px] overflow-hidden">
-<img alt="Villa Ka'an Panoramic &amp; Plunge Pool" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/AEtjO1Vp8GFOe1GPgqPnqW4W4vur268I2LiS1LsKLL1-PRIjOABJFA9bTA5kjL0RPMY3p5UHMEvChrixpRS8HFrB-xafFpWIUtBVZcHzzbqJ9lmiahSGDb5AzRvDlUGzl2RqxWXUwFmNk7F2QZESxmXYjGTN7nofaaDydD3cJ2uodFLa-A8yNCtddmY5PlbWTFdyoiedLiKfotoauTJRGOFu8OBxgLOBYuEZXojUEOCqoS7mTAe_6nv3GPkvuwY"/>
+<img alt="Villa Ka'an Panoramic &amp; Plunge Pool" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="assets/img/picina.webp">
 <div class="absolute top-4 left-4 z-10">
 <span class="text-[11px] font-bold bg-black/80 text-primary border border-primary/40 px-2.5 py-1 rounded-full backdrop-blur-md">VILLA PRIVADA</span>
 </div>
@@ -430,7 +485,7 @@
 </div>
 </div>
 <div class="pt-4 border-t border-outline-variant/20 flex items-center gap-3">
-<a class="flex-1 bg-primary-container text-on-primary-container font-bold py-3 rounded-xl shadow-[0_0_20px_rgba(0,212,255,0.4)] hover:bg-primary-fixed-dim hover:scale-[1.02] transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2" href="#reserva-widget">
+<a class="flex-1 bg-primary-container text-on-primary-container font-bold py-3 rounded-xl shadow-[0_0_20px_rgba(0,212,255,0.4)] hover:bg-primary-fixed-dim hover:scale-[1.02] transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2" href="#motor-reserva">
 <span class="material-symbols-outlined text-lg">bookmark</span> Reservar Suite
 </a>
 <a class="px-4 py-3 border border-outline-variant/40 hover:border-primary-container rounded-xl text-white text-xs font-semibold flex items-center gap-1.5 transition-all" href="#ar-experience">
@@ -442,7 +497,7 @@
 <!-- Room 2: Tulum Jungle Cenote & Infinity Pool Suite -->
 <div class="glass-card rounded-2xl overflow-hidden border border-outline-variant/30 hover:border-primary-container transition-all flex flex-col group reveal-on-scroll active">
 <div class="relative h-[320px] overflow-hidden">
-<img alt="Tulum Jungle Cenote &amp; Infinity Pool Suite" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/AEtjO1WyBCat-o0v_6pXfVh6sZJ2z6c5FYO1GTPUBJZ8yz74H_u6Hw03SNkEdPNfbyiOwncfMxpbGy0N6XVDp3UyOS29xpKCkVP2s-dIXVzVH2-iNfTDMXHqvYJV9MnFzMS0xIDeR3-V_NwHmjyyMD6jGrYBi-GwTf23lSGNngvuBsHlHi6cmK9KWYGIOgnkjPZYLjzswGWBV1Kw6eOZ-0OdWleI1fo6VelXj2p-Hc8ek6WG-KkfBBNf6c4RK_0"/>
+<img alt="Tulum Jungle Cenote &amp; Infinity Pool Suite" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="assets/img/habitacion-vista.webp">
 <div class="absolute top-4 left-4 z-10">
 <span class="text-[11px] font-bold bg-black/80 text-primary border border-primary/40 px-2.5 py-1 rounded-full backdrop-blur-md">MASTER CENOTE SUITE</span>
 </div>
@@ -474,7 +529,7 @@
 </div>
 </div>
 <div class="pt-4 border-t border-outline-variant/20 flex items-center gap-3">
-<a class="flex-1 bg-primary-container text-on-primary-container font-bold py-3 rounded-xl shadow-[0_0_20px_rgba(0,212,255,0.4)] hover:bg-primary-fixed-dim hover:scale-[1.02] transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2" href="#reserva-widget">
+<a class="flex-1 bg-primary-container text-on-primary-container font-bold py-3 rounded-xl shadow-[0_0_20px_rgba(0,212,255,0.4)] hover:bg-primary-fixed-dim hover:scale-[1.02] transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2" href="#motor-reserva">
 <span class="material-symbols-outlined text-lg">bookmark</span> Reservar Suite
 </a>
 <a class="px-4 py-3 border border-outline-variant/40 hover:border-primary-container rounded-xl text-white text-xs font-semibold flex items-center gap-1.5 transition-all" href="#ar-experience">
@@ -486,12 +541,34 @@
 </div>
 </div>
 </section>
+<!-- NEW SECTION: Featured Interactive Center Focus / Coverflow Reveal Carousel -->
+<section class="py-stack-lg relative z-10 overflow-hidden" id="filosofia-carousel"><style>.swiper-center-focus .swiper-slide-active .slide-card-container { border-color: #00f3ff !important; box-shadow: 0 0 25px rgba(0, 212, 255, 0.95), 0 0 55px rgba(0, 243, 255, 0.65), 0 0 95px rgba(0, 212, 255, 0.4), inset 0 0 20px rgba(0, 243, 255, 0.35) !important; } .swiper-center-focus .swiper-slide-active img { filter: brightness(1.15) contrast(1.05) drop-shadow(0 0 20px rgba(0, 243, 255, 0.4)) !important; } .swiper-center-focus .swiper-slide-active .active-badge { box-shadow: 0 0 15px #00f3ff !important; border-color: #00f3ff !important; color: #ffffff !important; }</style>
+<div class="max-w-7xl mx-auto px-container-padding-mobile md:px-container-padding-desktop">
+<!-- Header with controls -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 reveal-on-scroll active">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container animate-pulse shadow-[0_0_8px_#00d4ff]"></span>
+<span class="text-label-caps text-primary uppercase tracking-widest font-bold">Filosofía &amp; Vivencias Sensoriales</span>
+</div>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-white font-extrabold tracking-tight">
+                El Santuario en Cada Detalle
+            </h2>
+<p class="text-on-surface-variant text-body-md max-w-2xl mt-1">
+                Explora los seis pilares que transforman tu estadía en un viaje introspectivo donde la selva, el bienestar y el diseño conviven en perfecta sincronía.
+            </p>
+</div>
+</div>
+<!-- Swiper Container with Center Focus / Coverflow Reveal -->
+<div class="swiper swiper-center-focus reveal-on-scroll active swiper-initialized swiper-horizontal swiper-backface-hidden relative"><div aria-live="off" class="swiper-wrapper" id="swiper-wrapper-5d74ffde118275ae" style="transition-duration: 0ms; transform: translate3d(-792px, 0px, 0px); cursor: grab; transition-delay: 0ms;"><div aria-label="1 / 6" class="swiper-slide" data-swiper-slide-index="0" role="group" style="width: 360px; margin-right: 36px;"><div class="slide-card-container aspect-video relative rounded-3xl overflow-hidden glass-card border border-outline-variant/40 transition-all duration-400 group shadow-2xl"><img alt="Íntimo por Diseño" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="assets/img/carrucel-1.webp"><div class="absolute top-4 left-4 z-10"><span class="active-badge text-[10px] font-mono font-bold bg-black/60 text-primary-fixed border border-primary/40 px-3 py-1 rounded-full backdrop-blur-md shadow-md">PILAR 02 // PRIVACIDAD</span></div></div><div class="slide-info-panel mt-4 p-4 rounded-2xl bg-surface-container/60 backdrop-blur-md border border-outline-variant/20 text-center transition-all"><span class="text-[11px] font-mono tracking-widest uppercase text-primary font-bold block mb-1">SANCTUARY &amp; CALMA</span><h3 class="font-headline-md text-white text-lg md:text-xl font-bold uppercase tracking-tight mb-1.5">ÍNTIMO POR DISEÑO</h3><p class="text-on-surface-variant text-xs md:text-sm leading-relaxed max-w-lg mx-auto">Un entorno exclusivo con amplios espacios para explorar, relajarse y reconectar a su propio ritmo.</p></div></div><div aria-label="2 / 6" class="swiper-slide" data-swiper-slide-index="1" role="group" style="width: 360px; margin-right: 36px;"><div class="slide-card-container aspect-video relative rounded-3xl overflow-hidden glass-card border border-outline-variant/40 transition-all duration-400 group shadow-2xl"><img alt="Más allá del todo incluido" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="assets/img/carrucel-2.webp"><div class="absolute top-4 left-4 z-10"><span class="active-badge text-[10px] font-mono font-bold bg-black/60 text-primary-fixed border border-primary/40 px-3 py-1 rounded-full backdrop-blur-md shadow-md">PILAR 03 // LIBERTAD TOTAL</span></div></div><div class="slide-info-panel mt-4 p-4 rounded-2xl bg-surface-container/60 backdrop-blur-md border border-outline-variant/20 text-center transition-all"><span class="text-[11px] font-mono tracking-widest uppercase text-neon-green font-bold block mb-1">HOSPITALIDAD FLUIDA</span><h3 class="font-headline-md text-white text-lg md:text-xl font-bold uppercase tracking-tight mb-1.5">MÁS ALLÁ DEL TODO INCLUIDO</h3><p class="text-on-surface-variant text-xs md:text-sm leading-relaxed max-w-lg mx-auto">Experiencias seleccionadas y servicios personalizados permitiendo que los días fluyan naturalmente sin horarios.</p></div></div><div aria-label="3 / 6" class="swiper-slide swiper-slide-prev" data-swiper-slide-index="2" role="group" style="width: 360px; margin-right: 36px;"><div class="slide-card-container aspect-video relative rounded-3xl overflow-hidden glass-card border border-outline-variant/40 transition-all duration-400 group shadow-2xl"><img alt="Bienestar, Naturalmente" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="assets/img/carrucel-3.webp"><div class="absolute top-4 left-4 z-10"><span class="active-badge text-[10px] font-mono font-bold bg-black/60 text-primary-fixed border border-primary/40 px-3 py-1 rounded-full backdrop-blur-md shadow-md">PILAR 04 // BALANCE HOLÍSTICO</span></div></div><div class="slide-info-panel mt-4 p-4 rounded-2xl bg-surface-container/60 backdrop-blur-md border border-outline-variant/20 text-center transition-all"><span class="text-[11px] font-mono tracking-widest uppercase text-primary font-bold block mb-1">RITUALES &amp; MOVIMIENTO</span><h3 class="font-headline-md text-white text-lg md:text-xl font-bold uppercase tracking-tight mb-1.5">BIENESTAR, NATURALMENTE</h3><p class="text-on-surface-variant text-xs md:text-sm leading-relaxed max-w-lg mx-auto">Acondicionamiento físico al aire libre, movimiento en la naturaleza y rituales de spa diseñados para restaurar el equilibrio.</p></div></div><div aria-label="4 / 6" class="swiper-slide swiper-slide-active" data-swiper-slide-index="3" role="group" style="width: 360px; margin-right: 36px;"><div class="slide-card-container aspect-video relative rounded-3xl overflow-hidden glass-card border border-outline-variant/40 transition-all duration-400 group shadow-2xl"><img alt="Gastronomía sin guion" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="assets/img/carrucel-4.webp"><div class="absolute top-4 left-4 z-10"><span class="active-badge text-[10px] font-mono font-bold bg-black/60 text-primary-fixed border border-primary/40 px-3 py-1 rounded-full backdrop-blur-md shadow-md">PILAR 05 // SABORES SAGRADOS</span></div></div><div class="slide-info-panel mt-4 p-4 rounded-2xl bg-surface-container/60 backdrop-blur-md border border-outline-variant/20 text-center transition-all"><span class="text-[11px] font-mono tracking-widest uppercase text-neon-green font-bold block mb-1">COCINA BOTÁNICA &amp; VIVA</span><h3 class="font-headline-md text-white text-lg md:text-xl font-bold uppercase tracking-tight mb-1.5">GASTRONOMÍA SIN GUION</h3><p class="text-on-surface-variant text-xs md:text-sm leading-relaxed max-w-lg mx-auto">Propuesta culinaria flexible que se adapta a sus antojos, en cualquier momento y en cualquier lugar.</p></div></div><div aria-label="5 / 6" class="swiper-slide swiper-slide-next" data-swiper-slide-index="4" role="group" style="width: 360px; margin-right: 36px;"><div class="slide-card-container aspect-video relative rounded-3xl overflow-hidden glass-card border border-outline-variant/40 transition-all duration-400 group shadow-2xl"><img alt="Aventuras sin fin" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="assets/img/carrucel-5.webp"><div class="absolute top-4 left-4 z-10"><span class="active-badge text-[10px] font-mono font-bold bg-black/60 text-primary-fixed border border-primary/40 px-3 py-1 rounded-full backdrop-blur-md shadow-md">PILAR 06 // EXPEDICIONES</span></div></div><div class="slide-info-panel mt-4 p-4 rounded-2xl bg-surface-container/60 backdrop-blur-md border border-outline-variant/20 text-center transition-all"><span class="text-[11px] font-mono tracking-widest uppercase text-primary font-bold block mb-1">EXPEDICIÓN ARQUEOLÓGICA</span><h3 class="font-headline-md text-white text-lg md:text-xl font-bold uppercase tracking-tight mb-1.5">AVENTURAS SIN FIN</h3><p class="text-on-surface-variant text-xs md:text-sm leading-relaxed max-w-lg mx-auto">Caminatas guiadas, nado en el océano y experiencias personalizadas moldeadas por la curiosidad.</p></div></div><div aria-label="6 / 6" class="swiper-slide" data-swiper-slide-index="5" role="group" style="width: 360px; margin-right: 36px;"><div class="slide-card-container aspect-video relative rounded-3xl overflow-hidden glass-card border border-outline-variant/40 transition-all duration-400 group shadow-2xl"><img alt="Guiado por la Naturaleza" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="assets/img/carrucel-6.webp"><div class="absolute top-4 left-4 z-10"><span class="active-badge text-[10px] font-mono font-bold bg-black/60 text-primary-fixed border border-primary/40 px-3 py-1 rounded-full backdrop-blur-md shadow-md">PILAR 01 // BIO-DISEÑO</span></div></div><div class="slide-info-panel mt-4 p-4 rounded-2xl bg-surface-container/60 backdrop-blur-md border border-outline-variant/20 text-center transition-all"><span class="text-[11px] font-mono tracking-widest uppercase text-neon-green font-bold block mb-1">ARQUITECTURA BIOFÍLICA</span><h3 class="font-headline-md text-white text-lg md:text-xl font-bold uppercase tracking-tight mb-1.5">GUIADO POR LA NATURALEZA</h3><p class="text-on-surface-variant text-xs md:text-sm leading-relaxed max-w-lg mx-auto">El diseño vive en diálogo con la naturaleza. Los espacios al aire libre y materiales naturales reflejan los ritmos del bosque y la costa.</p></div></div></div><div class="swiper-pagination mt-6 !relative !bottom-0 swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal"><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 1"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 2"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 3"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button" aria-label="Go to slide 4" aria-current="true"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 5"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 6"></span></div><div class="pointer-events-none absolute inset-y-0 inset-x-0 z-30 flex items-center justify-between px-2 md:px-6"><button aria-controls="swiper-wrapper-5d74ffde118275ae" aria-label="Previous slide" class="swiper-btn-prev pointer-events-auto w-12 h-12 md:w-14 md:h-14 rounded-full glass-card border border-primary/40 flex items-center justify-center text-primary hover:bg-primary-container hover:text-on-primary-container hover:shadow-[0_0_20px_rgba(0,212,255,0.6)] shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all cursor-pointer" tabindex="0"><span class="material-symbols-outlined text-2xl md:text-3xl">arrow_back</span></button><button aria-controls="swiper-wrapper-5d74ffde118275ae" aria-label="Next slide" class="swiper-btn-next pointer-events-auto w-12 h-12 md:w-14 md:h-14 rounded-full glass-card border border-primary/40 flex items-center justify-center text-primary hover:bg-primary-container hover:text-on-primary-container hover:shadow-[0_0_20px_rgba(0,212,255,0.6)] shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all cursor-pointer" tabindex="0"><span class="material-symbols-outlined text-2xl md:text-3xl">arrow_forward</span></button></div><span aria-atomic="true" aria-live="assertive" class="swiper-notification"></span><span aria-atomic="true" aria-live="assertive" class="swiper-notification"></span><span aria-atomic="true" aria-live="assertive" class="swiper-notification"></span><span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span><span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+</div>
+</section>
 <!-- Gastronomy & Beachfront Dining Section -->
 <section class="py-stack-lg relative z-10" id="gastronomia">
 <div class="max-w-7xl mx-auto px-container-padding-mobile md:px-container-padding-desktop">
 <div class="glass-card rounded-3xl overflow-hidden border border-outline-variant/30 grid grid-cols-1 lg:grid-cols-12 reveal-on-scroll active">
 <div class="lg:col-span-7 relative min-h-[380px] lg:min-h-[460px]">
-<img alt="Desayunos Artesanales &amp; Gastronomía Maya" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1Xf_hs065mTZhAkwrsgQTNOobDDTApY8ipIOqdNfjDG1eu_1mVRrpFpOfrY81JBmrWdZsCqhrRfSQC1qS-ucQf4nlICdHUPOGGJNHUBhPSHcUYuP8Ds1BOG4EPmICqCMLmJrlAtQmwlGnfMnm5y_bg1wJu6GVUpxj1dPgDi08FJqWMJB7HUd-u__S_YCfATL_LDe-Fy4EFtCu1bhbWcsDhgRkW8TRgTkMdzdE9ns8Dc7Y3rAPqKBJsoZP4"/>
+<img alt="Desayunos Artesanales Frente al Mar Caribe" class="w-full h-full object-cover" src="assets/img/dasayuno-playa.webp">
 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-surface/80 hidden lg:block"></div>
 <div class="absolute top-4 left-4 z-10">
 <span class="text-label-caps bg-black/80 text-primary border border-primary/40 px-3 py-1 rounded-full backdrop-blur-md">FRENTE AL MAR CARIBE</span>
@@ -570,7 +647,7 @@
 <div class="glass-card rounded-2xl p-6 md:p-8 border border-primary/30 flex flex-col md:flex-row items-center justify-between gap-6 reveal-on-scroll active">
 <div class="flex items-center gap-5">
 <div class="w-28 h-28 rounded-xl overflow-hidden shadow-[0_0_25px_rgba(0,212,255,0.35)] border-2 border-primary-container flex-shrink-0 bg-black">
-<img alt="Escanea QR para WebAR" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1UcCmGDRhjUj567nYCx9E9gp7Micavg4dLH90fHJYCNb5W65A68_EfOIIWLcbi_oTN3aRffIJOZGeLxJB-9DF47_ucCxyEyhCiT0Mmv2vnm-N6SxtKIGCTSVKlQsR-1Y9n4ZL-NIpLaj01DRzpyYX5HNqWsllFE0d1cF9kK5oeBXfdFoFiiVClesgZfiOgg7EfCPj09IB8B-VLYP98HYGT2KFd_f_g_0bR7eXNeY1zeDdqgGSrJT3iRoGo"/>
+<img alt="Código QR WebAR Escaneable" class="w-full h-full object-cover" src="assets/img/codigo-qr.webp">
 </div>
 <div>
 <h4 class="text-white font-headline-md text-lg mb-1">Escanea para activar la experiencia WebAR</h4>
@@ -667,7 +744,7 @@
 </div>
 </div>
 <!-- 3 IMÁGENES EN UNA SOLA HILERA HORIZONTAL LIMPIA Y BALANCEADA -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6"><div class="relative group cursor-pointer overflow-hidden rounded-2xl glass-card h-[460px] reveal-on-scroll active transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(0,212,255,0.25)] border border-outline-variant/30"><img alt="Suite Caverna Petra" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" decoding="async" loading="lazy" src="https://lh3.googleusercontent.com/aida/AEtjO1U7jBRg3PX9vQ33LBg8Q01d61sZZyki006EGjEVEtjAGj_6yAYskt_d1ZlUCvSvWIZpUAoryG6d2xHYpB7RM4t-4JiZhGkEoVz7PlFKL8hgg_eMC0kxvyXRiqHuVkrkXfvjFvqgz97fnIbSzIGrHZyWlyTgQfEgYQoa1nbScEcOguMi8lxTiNsH9jMiSesHicWfIGaEGse2FjygX7A9vkIoYuboBPPpHg7nS1jFdyPTz0lbhxnaKO-39Ufa3pTEYgoSHbdZmHWPUQ"/><div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6"><div class="flex items-center justify-between mb-2"><span class="text-label-caps bg-primary/20 text-primary px-3 py-1 rounded-full backdrop-blur-md w-fit font-bold">CUARTO TEMÁTICO CUEVA</span><span class="text-xs font-mono font-bold text-primary-fixed bg-black/70 border border-primary/30 px-2.5 py-0.5 rounded-full">$380 USD / noche</span></div><h4 class="font-headline-md text-white text-xl mb-1">Suite Caverna Petra</h4><p class="text-on-surface text-xs leading-relaxed opacity-90">Excavación bioclimática inspirada en el cañón del Siq. Muros de arenisca con proyector holográfico ultra-HD que reproduce los templos y el Tesoro de Petra a escala real.</p></div></div><div class="relative group cursor-pointer overflow-hidden rounded-2xl glass-card h-[460px] reveal-on-scroll active transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(0,212,255,0.25)] border border-outline-variant/30"><img alt="Suite Cueva Tikal" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" decoding="async" loading="lazy" src="https://lh3.googleusercontent.com/aida/AEtjO1VaP6-oagR6s3aCmiBKIR6diCsQUJB88LqvdL-S6p3Unyga8138jk5FViy7S78M43ZMbK9tXj1mHMQDQqf5nNbwQqfDXqAIH0vJu4AndYPQ63FImm5942g8cGjVHXm7MRT6Wsmf0A-ClhBZDnUm1xOUE6TonqxTm6aPVsUckYEclhALxAp9Gp22th-JVNtrn1d1kMLuzbpp20B3W3tna2q92UYRNlvhoFxZ17oVSI_949_bHWVqxo6I9CgbEVzIkLE2tGfDfFDm"/><div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6"><div class="flex items-center justify-between mb-2"><span class="text-label-caps bg-primary/20 text-primary px-3 py-1 rounded-full backdrop-blur-md w-fit font-bold">GRUTA INMERSIVA 360°</span><span class="text-xs font-mono font-bold text-primary-fixed bg-black/70 border border-primary/30 px-2.5 py-0.5 rounded-full">$410 USD / noche</span></div><h4 class="font-headline-md text-white text-xl mb-1">Suite Cueva Tikal</h4><p class="text-on-surface text-xs leading-relaxed opacity-90">Ambiente tipo gruta selvática con frescura natural y proyección inmersiva 360° en tiempo real de las pirámides mayas entre la bruma ancestral.</p></div></div><div class="relative group cursor-pointer overflow-hidden rounded-2xl glass-card h-[460px] reveal-on-scroll active transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(0,212,255,0.25)] border border-outline-variant/30"><img alt="Suite Cripta Acrópolis" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" decoding="async" loading="lazy" src="https://lh3.googleusercontent.com/aida/AEtjO1VMmCObIGs3-Zarn4sj3tC1TO45uxzkW1BajVq1_uhWfa4599DiZ6PxVSCF2DoahAlXgEYwZuHA6fs-D9wUKx7NQXN3TrNqXzselqGz-PLjJwS3t-K9cMFyf7tennon1p5h0DquDttG2_hcLJYtVSRv4HlvVuT-fVR6TNmEZphtqLRu9sbw_mmTAJU1mC44HyBVr29DxxkqD1bLjGf4B6ejNs3g6RiPE4smCIOJvqNd_k7D-zv2T1J2JkD4rnnbRGjI-ND5455cGQ"/><div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6"><div class="flex items-center justify-between mb-2"><span class="text-label-caps bg-primary/20 text-primary px-3 py-1 rounded-full backdrop-blur-md w-fit font-bold">CRIPTA CLÁSICA PROYECTADA</span><span class="text-xs font-mono font-bold text-primary-fixed bg-black/70 border border-primary/30 px-2.5 py-0.5 rounded-full">$390 USD / noche</span></div><h4 class="font-headline-md text-white text-xl mb-1">Suite Cripta Acrópolis</h4><p class="text-on-surface text-xs leading-relaxed opacity-90">Refugio pétreo con atmósfera clásica e iluminación rasante que proyecta reconstrucciones arquitectónicas interactivas del Partenón en 450 a.C.</p></div></div></div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6"><div class="relative group cursor-pointer overflow-hidden rounded-2xl glass-card h-[460px] reveal-on-scroll active transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(0,212,255,0.25)] border border-outline-variant/30"><img alt="Suite Caverna Petra" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" decoding="async" loading="lazy" src="assets/img/petra.webp"><div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6"><div class="flex items-center justify-between mb-2"><span class="text-label-caps bg-primary/20 text-primary px-3 py-1 rounded-full backdrop-blur-md w-fit font-bold">CUARTO TEMÁTICO CUEVA</span><span class="text-xs font-mono font-bold text-primary-fixed bg-black/70 border border-primary/30 px-2.5 py-0.5 rounded-full">$380 USD / noche</span></div><h4 class="font-headline-md text-white text-xl mb-1">Suite Caverna Petra</h4><p class="text-on-surface text-xs leading-relaxed opacity-90">Excavación bioclimática inspirada en el cañón del Siq. Muros de arenisca con proyector holográfico ultra-HD que reproduce los templos y el Tesoro de Petra a escala real.</p></div></div><div class="relative group cursor-pointer overflow-hidden rounded-2xl glass-card h-[460px] reveal-on-scroll active transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(0,212,255,0.25)] border border-outline-variant/30"><img alt="Suite Cueva Tikal" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" decoding="async" loading="lazy" src="assets/img/tikal.webp"><div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6"><div class="flex items-center justify-between mb-2"><span class="text-label-caps bg-primary/20 text-primary px-3 py-1 rounded-full backdrop-blur-md w-fit font-bold">GRUTA INMERSIVA 360°</span><span class="text-xs font-mono font-bold text-primary-fixed bg-black/70 border border-primary/30 px-2.5 py-0.5 rounded-full">$410 USD / noche</span></div><h4 class="font-headline-md text-white text-xl mb-1">Suite Cueva Tikal</h4><p class="text-on-surface text-xs leading-relaxed opacity-90">Ambiente tipo gruta selvática con frescura natural y proyección inmersiva 360° en tiempo real de las pirámides mayas entre la bruma ancestral.</p></div></div><div class="relative group cursor-pointer overflow-hidden rounded-2xl glass-card h-[460px] reveal-on-scroll active transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(0,212,255,0.25)] border border-outline-variant/30"><img alt="Suite Cripta Acrópolis" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" decoding="async" loading="lazy" src="assets/img/acropolis.webp"><div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6"><div class="flex items-center justify-between mb-2"><span class="text-label-caps bg-primary/20 text-primary px-3 py-1 rounded-full backdrop-blur-md w-fit font-bold">CRIPTA CLÁSICA PROYECTADA</span><span class="text-xs font-mono font-bold text-primary-fixed bg-black/70 border border-primary/30 px-2.5 py-0.5 rounded-full">$390 USD / noche</span></div><h4 class="font-headline-md text-white text-xl mb-1">Suite Cripta Acrópolis</h4><p class="text-on-surface text-xs leading-relaxed opacity-90">Refugio pétreo con atmósfera clásica e iluminación rasante que proyecta reconstrucciones arquitectónicas interactivas del Partenón en 450 a.C.</p></div></div></div>
 <!-- Interactive 2: Right Tilt Interactive Video Demo with Lazy Loading & Hover Play/Pause -->
 <div class="mt-10 reveal-on-scroll active flex flex-col items-center" style="perspective: 1200px;">
 <div class="text-center mb-4">
@@ -695,7 +772,7 @@
 <!-- Video Container with Lazy Loading -->
 <div class="relative w-full aspect-video h-[260px] md:h-[320px]">
 <video class="w-full h-full object-cover" id="video-tulum-2" muted="" playsinline="" preload="metadata">
-<source data-src="https://res.cloudinary.com/hw31kdln/video/upload/v1790108200/Tulum_2_tdbjfp.mp4" type="video/mp4"/>
+<source data-src="https://res.cloudinary.com/hw31kdln/video/upload/v1790108200/Tulum_2_tdbjfp.mp4" src="https://res.cloudinary.com/hw31kdln/video/upload/v1790108200/Tulum_2_tdbjfp.mp4" type="video/mp4">
 </video>
 </div>
 <!-- Bottom HUD Bar -->
@@ -719,7 +796,7 @@
 <!-- Video Container -->
 <div class="w-full md:w-1/2 aspect-video rounded-xl overflow-hidden relative shadow-[0_0_30px_rgba(57,255,20,0.2)] transition-all duration-700 hover:scale-[1.02]">
 <video autoplay="" class="w-full h-full object-cover" loop="" muted="" playsinline="">
-<source src="https://res.cloudinary.com/hw31kdln/video/upload/v1784680774/hailuo-2_3_6_second_16_9_cinematic_animation._A_futuristic_dark_technological_cube_with_glo-0_furzbo.mp4" type="video/mp4"/>
+<source src="https://res.cloudinary.com/hw31kdln/video/upload/v1784680774/hailuo-2_3_6_second_16_9_cinematic_animation._A_futuristic_dark_technological_cube_with_glo-0_furzbo.mp4" type="video/mp4">
 </video>
 <div class="absolute top-4 left-4 bg-neon-green/10 backdrop-blur-md border border-neon-green/40 p-2 rounded-lg text-[10px] font-mono text-neon-green flex flex-col gap-1">
 <span class="animate-pulse">● CORE_STABLE</span>
@@ -746,14 +823,18 @@
 </div>
 </div>
 </section>
-<!-- SELECCIONA TU ESTANCIA / RESERVAR - REUBICADO HACIA ABAJO JUSTO ANTES DEL FOOTER -->
-<section class="py-stack-lg relative z-10" id="reserva-widget">
+<!-- SELECCIONA TU ESTANCIA / RESERVAR - CON ANIMACIÓN INTERACTIVA THREE.JS PIRÁMIDE ESTILIZADA -->
+<section class="py-stack-lg relative z-10" id="motor-reserva">
 <div class="max-w-6xl mx-auto px-container-padding-mobile md:px-container-padding-desktop">
 <div class="glass-card p-6 md:p-10 rounded-3xl border-2 border-primary-container/40 shadow-[0_0_50px_rgba(0,212,255,0.25)] text-left reveal-on-scroll active relative overflow-hidden">
-<div class="absolute -bottom-10 -left-10 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Three.js Animated Pyramid Interactive Canvas Container -->
+
+<div class="relative z-10">
 <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-outline-variant/30">
 <div>
-<span class="text-label-caps bg-primary-container/20 text-primary-fixed border border-primary-container/40 px-3 py-1 rounded-full uppercase tracking-widest font-bold">Motor de Reserva Directa</span>
+<span class="text-label-caps bg-primary-container/20 text-primary-fixed border border-primary-container/40 px-3 py-1 rounded-full uppercase tracking-widest font-bold inline-flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span> Motor de Reserva Directa • Tulum 3D Engine
+</span>
 <h3 class="text-2xl md:text-3xl font-display-lg text-white font-bold mt-2">Selecciona tu Estancia &amp; Fechas</h3>
 </div>
 <div class="flex items-center gap-3">
@@ -766,19 +847,19 @@
 <label class="text-xs text-on-surface-variant font-semibold flex items-center gap-1">
 <span class="material-symbols-outlined text-sm text-primary">calendar_today</span> Llegada
 </label>
-<input class="w-full bg-black/60 border border-outline-variant/40 rounded-xl px-4 py-3 text-sm text-white focus:border-primary-container focus:outline-none transition-colors" type="date" value="2025-04-10"/>
+<input class="w-full bg-black/70 border border-outline-variant/40 rounded-xl px-4 py-3 text-sm text-white focus:border-primary-container focus:outline-none transition-colors backdrop-blur-md" type="date" value="2025-04-10">
 </div>
 <div class="space-y-1.5">
 <label class="text-xs text-on-surface-variant font-semibold flex items-center gap-1">
 <span class="material-symbols-outlined text-sm text-primary">event</span> Salida
 </label>
-<input class="w-full bg-black/60 border border-outline-variant/40 rounded-xl px-4 py-3 text-sm text-white focus:border-primary-container focus:outline-none transition-colors" type="date" value="2025-04-17"/>
+<input class="w-full bg-black/70 border border-outline-variant/40 rounded-xl px-4 py-3 text-sm text-white focus:border-primary-container focus:outline-none transition-colors backdrop-blur-md" type="date" value="2025-04-17">
 </div>
 <div class="space-y-1.5">
 <label class="text-xs text-on-surface-variant font-semibold flex items-center gap-1">
 <span class="material-symbols-outlined text-sm text-primary">group</span> Huéspedes &amp; Suite
 </label>
-<select class="w-full bg-black/60 border border-outline-variant/40 rounded-xl px-4 py-3 text-sm text-white focus:border-primary-container focus:outline-none transition-colors">
+<select class="w-full bg-black/70 border border-outline-variant/40 rounded-xl px-4 py-3 text-sm text-white focus:border-primary-container focus:outline-none transition-colors backdrop-blur-md">
 <option>2 Adultos — Villa Ka’an Panoramic</option>
 <option>2 Adultos — Master Cenote Suite</option>
 <option>4 Adultos — 2 Suites Integradas</option>
@@ -795,6 +876,7 @@
 <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-xs text-neon-green">check_circle</span> Cancelación flexible gratuita hasta 48 horas antes</span>
 <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-xs text-primary">verified_user</span> Mejor tarifa garantizada directa con check-in express</span>
 <span class="flex items-center gap-1.5 text-primary-fixed"><span class="material-symbols-outlined text-xs text-neon-green">card_giftcard</span> 7+ Días incluye Pase VR Premium de cortesía</span>
+</div>
 </div>
 </div>
 </div>
@@ -819,7 +901,7 @@
 </div>
 </div>
 <div class="flex items-center gap-3">
-<a class="bg-primary-container text-on-primary-container font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider hover:bg-primary-fixed-dim transition-all shadow-[0_0_20px_rgba(0,212,255,0.4)]" href="#reserva-widget">
+<a class="bg-primary-container text-on-primary-container font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider hover:bg-primary-fixed-dim transition-all shadow-[0_0_20px_rgba(0,212,255,0.4)]" href="#motor-reserva">
     Reservar Ahora
 </a>
 </div>
@@ -827,7 +909,7 @@
 <div class="flex flex-col md:flex-row justify-between items-center gap-stack-sm pb-8 border-b border-outline-variant/15">
 <div class="flex items-center gap-4">
 <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary-container shadow-2xl">
-<img alt="Impulso Maya VR" class="w-full h-full object-cover" decoding="async" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-RslY0O1vuZynxF1yRsQWZ_joYXWV0rVwNotHYazRVHEyld6Jai2vlSWIII--AHgEvW7SHHHx9HjtuwLWQX3hAGFa0jU-nQr7Oj-oJzs5-xZKhlp_nZVuL5Fys28WBAW5eNgSBJOqfQnTghnMCBOzvO481Vp7D5tb8q52FAJ9HKS7CDcU9HqTFeHwRtb02NmrJn-_g1RHw4Kl9QVMwBO2CbgAcJpkuaKcN2XwN8Zqjmz7rRoD6XN-XDNP_VjawCrwC1JQCtU817Q"/>
+<img alt="Impulso Maya VR" class="w-full h-full object-cover" decoding="async" loading="lazy" src="assets/img/carrucel-1.webp">
 </div>
 <div>
 <p class="font-label-caps text-label-caps text-primary-fixed">IMPULSO MAYA</p>
@@ -838,6 +920,7 @@
 <div class="flex gap-6 text-sm">
 <a class="text-on-surface hover:text-white transition-all underline underline-offset-4" href="#explorar">Explorar</a>
 <a class="text-on-surface hover:text-white transition-all" href="#habitaciones">Suites</a>
+<a class="text-on-surface hover:text-white transition-all" href="#filosofia-carousel">Filosofía</a>
 <a class="text-on-surface hover:text-white transition-all" href="#vr-demo-pricing">VR &amp; Precios</a>
 <a class="text-on-surface hover:text-white transition-all" href="#tecnologia">Tecnología</a>
 <a class="text-on-surface hover:text-white transition-all" href="mailto:miguelcra85@gmail.com">miguelcra85@gmail.com</a>
@@ -848,7 +931,9 @@
 </div>
 </div>
 </footer>
-<!-- Particles Logic & Video Lazy Loading / Hover Interactive Engine -->
+<!-- Swiper JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<!-- Particles Logic, Video Lazy Loading & Swiper Initializer -->
 <script>
         // Particles Background
         const canvas = document.getElementById('particle-canvas');
@@ -925,12 +1010,163 @@
         animateParticles();
 
         // -------------------------------------------------------------
-        // Video Interactive Engine: Lazy Loading + Hover Play / Pause
+        // Three.js Animated Pyramid Interactive Section (#motor-reserva)
+        // -------------------------------------------------------------
+        (function initPyramidThreeJS() {
+            const container = document.getElementById('threejs-container-ANIMATION_2');
+            if (!container || typeof THREE === 'undefined') return;
+
+            let width = container.clientWidth || 800;
+            let height = container.clientHeight || 350;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+            camera.position.set(0, 6, 42);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+            renderer.setSize(width, height);
+            container.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const pointLight = new THREE.PointLight(0x00d4ff, 2.5);
+            pointLight.position.set(20, 20, 20);
+            scene.add(pointLight);
+
+            const pointLight2 = new THREE.PointLight(0x39ff14, 1.2);
+            pointLight2.position.set(-20, -10, 15);
+            scene.add(pointLight2);
+
+            // Pyramid Geometry (Stepped Maya Pyramid simulation)
+            const group = new THREE.Group();
+            const baseGeometry = new THREE.BoxGeometry(14, 1.2, 14);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0x00d4ff, 
+                shininess: 100, 
+                transparent: true, 
+                opacity: 0.75,
+                wireframe: false
+            });
+
+            const wireMaterial = new THREE.LineBasicMaterial({ color: 0xb4ebff, transparent: true, opacity: 0.4 });
+
+            for(let i = 0; i < 5; i++) {
+                const level = new THREE.Mesh(baseGeometry, material);
+                const scale = 1 - i * 0.18;
+                level.scale.set(scale, 1, scale);
+                level.position.y = (i * 1.35) - 3;
+                
+                // Add wireframe edge accent
+                const edges = new THREE.EdgesGeometry(baseGeometry);
+                const line = new THREE.LineSegments(edges, wireMaterial);
+                line.scale.set(scale, 1, scale);
+                line.position.y = (i * 1.35) - 3;
+                group.add(line);
+                
+                group.add(level);
+            }
+            scene.add(group);
+
+            // Space Particles
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 200;
+            const posArray = new Float32Array(particlesCount * 3);
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 80;
+            }
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({ 
+                size: 0.25, 
+                color: 0x00d4ff,
+                transparent: true,
+                opacity: 0.8
+            });
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+
+            function renderThree() {
+                requestAnimationFrame(renderThree);
+                group.rotation.y += 0.005;
+                particlesMesh.rotation.y += 0.001;
+                renderer.render(scene, camera);
+            }
+            renderThree();
+
+            function handleResize() {
+                if (!container) return;
+                const w = container.clientWidth || 800;
+                const h = container.clientHeight || 350;
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+                renderer.setSize(w, h);
+            }
+
+            window.addEventListener('resize', handleResize);
+            // Re-check after slight delay to ensure card layout settling
+            setTimeout(handleResize, 300);
+        })();
+
+        // -------------------------------------------------------------
+        // Swiper Center Focus / Coverflow Reveal Carousel
         // -------------------------------------------------------------
         document.addEventListener('DOMContentLoaded', () => {
+            if (typeof Swiper !== 'undefined') {
+                const swiper = new Swiper('.swiper-center-focus', {
+                    slidesPerView: 1.2,
+                    centeredSlides: true,
+                    spaceBetween: 20,
+                    loop: true,
+                    speed: 400,
+                    grabCursor: true,
+                    autoplay: {
+                        delay: 4500,
+                        disableOnInteraction: false,
+                        pauseOnMouseEnter: true,
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 1.8,
+                            spaceBetween: 28,
+                        },
+                        1024: {
+                            slidesPerView: 3,
+                            spaceBetween: 36,
+                        },
+                        1440: {
+                            slidesPerView: 3.4,
+                            spaceBetween: 40,
+                        }
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-btn-next',
+                        prevEl: '.swiper-btn-prev',
+                    },
+                });
+
+                // Click on non-centered slide to focus it
+                document.querySelectorAll('.swiper-center-focus .swiper-slide').forEach(slide => {
+                    slide.addEventListener('click', () => {
+                        if (!slide.classList.contains('swiper-slide-active')) {
+                            const index = slide.dataset.swiperSlideIndex;
+                            if (index !== undefined) {
+                                swiper.slideToLoop(parseInt(index));
+                            }
+                        }
+                    });
+                });
+            }
+
+            // -------------------------------------------------------------
+            // Video Interactive Engine: Lazy Loading + Hover Play / Pause
+            // -------------------------------------------------------------
             const containers = document.querySelectorAll('.interactive-video-container');
 
-            // 1. Lazy Loading Observer with rootMargin 150px
             const videoLazyObserver = new IntersectionObserver((entries, obs) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -961,7 +1197,6 @@
 
                 const startPlayback = () => {
                     if (!video) return;
-                    // Lazy load fallback if not loaded yet
                     const source = video.querySelector('source');
                     if (source && source.dataset.src && !source.src) {
                         source.src = source.dataset.src;
@@ -980,7 +1215,6 @@
                     playPromise = video.play();
                     if (playPromise !== undefined) {
                         playPromise.catch(err => {
-                            // Autoplay / play policy fallback
                             console.log('Play prevented or interrupted:', err);
                         });
                     }
@@ -1008,13 +1242,10 @@
                     }
                 };
 
-                // Desktop Hover events
                 container.addEventListener('mouseenter', startPlayback);
                 container.addEventListener('mouseleave', pausePlayback);
 
-                // Touch / Mobile Click Toggle
                 container.addEventListener('click', (e) => {
-                    // Prevent link clicks if any inside
                     if (video.paused) {
                         startPlayback();
                     } else {
@@ -1022,7 +1253,6 @@
                     }
                 });
 
-                // When video naturally ends, reset position smoothly
                 video.addEventListener('ended', () => {
                     video.currentTime = 0;
                     startPlayback();
@@ -1032,8 +1262,12 @@
 </script>
 <!-- Floating WhatsApp Button positioned strategically -->
 <a aria-label="Contact on WhatsApp" class="fixed z-50 w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_0_25px_rgba(37,211,102,0.6)] hover:scale-110 transition-transform animate-pulse" href="http://wa.me/525583335581" style="right: 90px; bottom: 14px;" target="_blank">
-<svg class="w-10 h-10 text-white" fill="currentColor" viewbox="0 0 24 24">
+<svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path>
 </svg>
 </a>
+
+
+
+
 </body></html>
